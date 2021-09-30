@@ -2,7 +2,7 @@ const express = require('express'); // express tiene una utilidad (Enrutador) qu
 const router = express.Router(); // me permite definir distintas rutas
 const Console = require ('../lib/Console');
 const UserService = require('../services/User.service');
-const Response = require('..lib/Response');
+const Response = require('../lib/Response');
 
 const console = new Console('USER-CONTROLLER');
 const userService = UserService.getInstance;

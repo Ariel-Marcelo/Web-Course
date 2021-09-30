@@ -1,4 +1,6 @@
 class Response{
+
+
     success (res, message, statusCode) {
         res.status(statusCode || 200).send({
             error: '',
@@ -13,5 +15,7 @@ class Response{
         });
     }
 
-    
+
 }
+
+module.exports = Response;

@@ -4,7 +4,7 @@
 
 
 // añadimos el user controller que exporta la variable con todas las rutas de la aplicación.
-const UserController = require('../Controlers/User.controller');
+const UserController = require('../Controlers/User.controller'); 
 
 
 const routes =  (server) => 

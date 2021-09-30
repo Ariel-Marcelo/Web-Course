@@ -1,4 +1,7 @@
 const chalk = require('chalk');
+// la función de esta clase es enviar  mensajes de error , advertenci o exito 
+//por consola  segun se lo pida los distintos módulos invoulucrados en nuestra aplicación web
+
 class Console{
     constructor(moduleName){
         this.moduleName = moduleName;

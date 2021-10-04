@@ -26,8 +26,7 @@ router.get('/:uuid', (req,res)=>{
         console.error('USER NOT FOUND: ' + uuid);
         response.error(res, 'USER NOT FOUND', 404);
         return;
-    }
-
+    }   
     console.success('GET USER: ' + uuid);
     return response.success(res,user); // siempre ignora los return porque este no debería devolver nada
     return; 
@@ -36,14 +35,15 @@ router.get('/:uuid', (req,res)=>{
 //create user
 router.post('/', (req,res)=>{
     const {name, lastName, email, phone, organization} = req.body;
-    if(!name || ! lastName){
+    if(!name || ! lastName || !email || !phone || !organization){
         console.error('MISSING PARAMETERS');
         response.error(res, 'MISSING PARAMETERS', 400);
         return;
     }
 
-    const user = userService.create(name, email, phone, organization);
+    const user = userService.create(name, lastName, email, phone, organization);
     console.success('CREATE USER: '+ user.uuid);
+    response.success(req, user);
 });
 
 //update user

@@ -1,13 +1,13 @@
 class Response {
     success (res, message, statusCode) {
-        res.status(statusCode || 200).send({
+        res.status(statusCode).send({
             error: '',
             body: message
         });
     }
 
     error (res, message, statusCode) {
-        res.status(statusCode || 500).send({
+        res.status(statusCode).send({
             error: message,
             body: ''
         });

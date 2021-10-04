@@ -1,15 +1,14 @@
-const { v4: uuidv4} 
+const { v4: uuidv4} = require('uuid');
 
 const users = [{
-    id:1,
+    id: 1,
     uuid: 'fdas',
-    name: 'fad',
-    lastName: 'dfa',
-    email:'fadf',
+    name: 'Ariel',
+    lastName: 'Pillajo',
+    email:'arnt@hotmail.com',
     password: 'fadf',
     organization: 'fdad'
-}
-];
+}];
 
 class UserService {
     static _userServiceInstance = null;
@@ -28,6 +27,7 @@ class UserService {
     }
 
     getOne(uuid){
+
         return users.find((user) => user.uuid === uuid);
     }
 
@@ -42,6 +42,7 @@ class UserService {
             organization
         }
         users.push(user);
+        return user;
     }
 }
 

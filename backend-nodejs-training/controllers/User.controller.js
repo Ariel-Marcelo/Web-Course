@@ -41,13 +41,37 @@ router.post('/', (req, res) => {
     const user = userService.create(name, lastName, email, phone, organization);
     console.success('CREATE USER: ' + user.uuid);
     response.success(res, user);
+    return;
 });
 
 // update user
-router.put('/:uuid', (req, res) => {});
+router.put('/:uuid', (req, res) => {
+    const {uuid} = req.params;
+    const {name, lastName, email, phone, organization} = req.body;
+    if (!uuid || !name || !lastName || !email || !phone || !organization) {
+        console.error('MISSING PARAMETERS');
+        response.error(res, 'MISSING PARAMETERS', 400);
+        return;
+    }
+    const newUser = userService.update(uuid, name, lastName, email, phone, organization);
+    console.success('USER UPDATED');
+    response.success(res, newUser);
+    return;
+});
 
 // delete user
-router.delete('/:uuid', (req, res) => {});
+router.delete('/:uuid', (req, res) => {
+    const {uuid} = req.params;
+    const userDeleted = userService.delete(uuid);
+    if(!userDeleted){
+        console.error('USER NOT FOUND: ' + uuid);
+        response.error(res, 'USER NOT FOUND', 404);
+        return;
+    }
+    console.success('USER DELETED');
+    response.success(res, userDeleted);
+    return;
+});
 
 // get reservations by user
 router.get('/:uuid/reservations', (req, res) => {});

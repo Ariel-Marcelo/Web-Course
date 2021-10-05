@@ -47,6 +47,33 @@ class UserService {
         return user;
     }
 
+    update(uuid, name, lastName, email, phone, organization){
+        
+        const userOld = users.find( (myuser) =>  myuser.uuid === uuid);
+        const index = users.findIndex( (myUser) => myUser.uuid === uuid);
+        const userUpdate = {
+            id: index + 1,
+            uuid: uuid,
+            name: name,
+            lastName: lastName,
+            email: email,
+            phone: phone, 
+            organization: organization
+        }
+        users.splice(index, 1, userUpdate );
+        return userUpdate;
+
+
+    }
+
+    delete(uuid){
+        const index = users.findIndex( (myUser) => myUser.uuid === uuid);
+       
+        const userDeleted = users[index];
+        users.splice(index, 1);
+        return userDeleted;
+    }
+
 }
 
 module.exports = UserService;

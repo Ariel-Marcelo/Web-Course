@@ -1,14 +1,17 @@
-const { v4: uuidv4} = require('uuid');
+const { v4: uuidv4 } = require('uuid');
 
-const users = [{
-    id: 1,
-    uuid: 'fdas',
-    name: 'Ariel',
-    lastName: 'Pillajo',
-    email:'arnt@hotmail.com',
-    password: 'fadf',
-    organization: 'fdad'
-}];
+const users = [
+    {
+        id: 1,
+        uuid: 'abcd-123',
+        name: 'John',
+        lastName: 'Doe',
+        email: 'example@exmple.com',
+        password: '123456',
+        phone: '123456789',
+        organization: 'Example',
+    }
+];
 
 class UserService {
     static _userServiceInstance = null;
@@ -22,18 +25,17 @@ class UserService {
         return UserService._userServiceInstance;
     }
 
-    getAll(){
+    getAll() {
         return users;
     }
 
-    getOne(uuid){
-
+    getOne(uuid) {
         return users.find((user) => user.uuid === uuid);
     }
 
-    create(name, lastName, email, phone, organization){
+    create(name, lastName, email, phone, organization) {
         const user = {
-            id:users.length + 1,
+            id: users.length + 1,
             uuid: uuidv4(),
             name,
             lastName,
@@ -44,6 +46,7 @@ class UserService {
         users.push(user);
         return user;
     }
+
 }
 
 module.exports = UserService;

@@ -7,9 +7,8 @@ const Response = require('../lib/Response');
 const console = new Console('AUTH-CONTROLLER');
 const response = new Response();
 
-//USER
 router.post('/user', () => {});
-//ADMIN
-router.post('/administrator',() => {})
+
+router.post('/administrator', () => {})
 
 module.exports = router;

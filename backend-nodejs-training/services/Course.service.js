@@ -1,16 +1,12 @@
-class CourseService{
-    static _courseServiceInstance = null; // en javascript no tenemos modificadores de acceso como private , protect
-    // el guión bajo indica un modificador de acceso ya que por defecto todo es público
-    constructor(){}
-    
-    static getInstance(){
-        if(CourseService._courseServiceInstance === null){
+class CourseService {
+    static _courseServiceInstance = null;
+
+    static getInstance() {
+        if (CourseService._courseServiceInstance === null) {
             CourseService._courseServiceInstance = new CourseService();
         }
-        return CourseService._courseServiceInstance; 
+        return CourseService._courseServiceInstance;
     }
-
-    
 }
 
 module.exports = CourseService;

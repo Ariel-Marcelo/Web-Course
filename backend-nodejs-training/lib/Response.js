@@ -1,5 +1,7 @@
 class Response {
-    success (res, message, statusCode){
+
+    success (res, message, statusCode) {
+
         res.status(statusCode || 200).send({
             error: '',
             body: message

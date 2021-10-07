@@ -44,12 +44,31 @@ class UserService {
         return user;
     }
 
-    async update() {
-        return null;
+    async update(uuid, name, lastName, email, phone, organization) {
+        
+        const userNew = await this._userModel.update(
+            {
+                email, 
+                name,
+                lastName,
+                phone,
+                organization,
+            },
+            {
+                where: {uuid}
+            }
+        );
+        return userNew;
     }
 
-    async delete() {
-        return null;
+    async delete(uuid) {
+        const userNew = await this._userModel.delete(
+            
+            {
+                where: {uuid}
+            }
+        );
+        return userNew;
     }
 
     async getReservations(uuid) {

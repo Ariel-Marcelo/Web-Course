@@ -47,28 +47,32 @@ router.post('/', async (req, res) => {
 
 // update user
 router.put('/:uuid', async (req, res) => {
-    try {
-        const { uuid } = req.params;
-        if (!uuid) {
-            return response.error(res, 'Data missing', 400);
-        }
-        const userService = await UserService.getInstance();
-        const { email, name, lastName, phone, organization, password } = req.body;
-        await userService.update(uuid, email, name, lastName, phone, organization, password);
-        console.success('User updated: ' + uuid);
-        return response.success(res, 'User updated', 200);
-    } catch (error) {
-        console.error(error);
-        if (err instanceof SequelizeDatabaseError) {
-            response.error(res, err.message, 404);
-        }
-        return response.error(res, error.message, 500);
+    const {uuid} = req.params;
+    const {name, lastName, email, phone, organization} = req.body;
+    if (!uuid || !name || !lastName || !email || !phone || !organization) {
+        console.error('MISSING PARAMETERS');
+        response.error(res, 'MISSING PARAMETERS', 400);
+        return;
     }
+    const newUser = userService.update(uuid, name, lastName, email, phone, organization);
+    console.success('USER UPDATED');
+    response.success(res, newUser);
+    return;
 });
 
 // delete user
 router.delete('/:uuid', (req, res) => {
-    
+    const {uuid} = req.params;
+    const userDeleted = userService.delete(uuid);
+    if(!userDeleted){
+        console.error('USER NOT FOUND: ' + uuid);
+        response.error(res, 'USER NOT FOUND', 404);
+        return;
+    }
+    console.success('USER DELETED');
+    response.success(res, userDeleted);
+    return;
+
 });
 
 // get reservations by user

@@ -1,79 +1,113 @@
-const { v4: uuidv4 } = require('uuid');
-
-const users = [
-    {
-        id: 1,
-        uuid: 'abcd-123',
-        name: 'John',
-        lastName: 'Doe',
-        email: 'example@exmple.com',
-        password: '123456',
-        phone: '123456789',
-        organization: 'Example',
-    }
-];
+const bcrypt = require('bcrypt');
+const Database = require('../lib/Database');
 
 class UserService {
     static _userServiceInstance = null;
 
-    constructor() {}
+    async getModels() {
+        const { UserModel, AuthModel, ReservationModel } = await Database.getModels();
+        this._userModel = UserModel;
+        this._authModel = AuthModel;
+        this._reservationModel = ReservationModel;
+    }
 
-    static getInstance() {
+    static async getInstance() {
         if (!UserService._userServiceInstance) {
             UserService._userServiceInstance = new UserService();
+            await UserService._userServiceInstance.getModels();
         }
         return UserService._userServiceInstance;
     }
 
-    getAll() {
-        return users;
+    async getAll() {
+        return this._userModel.findAll();
     }
 
-    getOne(uuid) {
-        return users.find((user) => user.uuid === uuid);
+    async getOne(uuid) {
+        return this._userModel.findOne({
+            where: { uuid }
+        });
     }
 
-    create(name, lastName, email, phone, organization) {
-        const user = {
-            id: users.length + 1,
-            uuid: uuidv4(),
+    async create(name, lastName, email, phone, organization, password) {
+        const user = await this._userModel.create({
+            email,
             name,
             lastName,
-            email,
             phone,
             organization
-        }
-        users.push(user);
+        });
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const auth = await this._authModel.create({ 
+            password: hashedPassword
+        });
+        await user.setAuth(auth);
         return user;
     }
 
-    update(uuid, name, lastName, email, phone, organization){
-        
-        const userOld = users.find( (myuser) =>  myuser.uuid === uuid);
-        const index = users.findIndex( (myUser) => myUser.uuid === uuid);
-        const userUpdate = {
-            id: index + 1,
-            uuid: uuid,
-            name: name,
-            lastName: lastName,
-            email: email,
-            phone: phone, 
-            organization: organization
+    async update(uuid, email, name, lastName, phone, organization, password) {
+        if(password){
+            const user = await this._userModel.findOne({
+                where: {
+                    uuid
+                },
+                include: [{
+                    model: this._authModel // allow to include another relationships
+                }]
+            });
         }
-        users.splice(index, 1, userUpdate );
-        return userUpdate;
-
-
+        if (!user) {
+            throw new Error('uuid is not valid');
+        }
+        const hashedPassword = await bcrypt.hash(password,10);
+        const auth = aw
+        const user = await this._userModel.update({
+            email,
+            name,
+            lastName,
+            phone,
+            organization
+        },{
+            where: {
+                uuid
+            },
+            returning: true
+        } );
     }
 
-    delete(uuid){
-        const index = users.findIndex( (myUser) => myUser.uuid === uuid);
-       
-        const userDeleted = users[index];
-        users.splice(index, 1);
-        return userDeleted;
+    async delete(uuid) {
+        const user = await this._userModel.findOne({
+            where: {uuid},
+            include: [{
+                model: this._authModel
+            }]
+        });
+        const auth = await user.getAuth();
+        await user.destroy();
+        await auth.destroy();
+        return user;
     }
 
+    async getReservations(uuid) {
+        const user = await this._userModel.findOne({
+            where: {
+                uuid
+            }
+        });
+        if(!user){
+            throw new Error('uuid not found')
+        }
+        const userReservations = await this._reservationModel.findAll({
+            where: {
+                userId: user.id
+            }
+        });
+        if(userReservations.length === 0){
+            //if is an empty array-->the user doesn't have reservations
+            return null;
+        }
+        return userReservations;
+    }
 }
 
 module.exports = UserService;
